@@ -1,10 +1,12 @@
 import json
 import os
 import streamlit as st
-from google import genai
-
+import google.generativeai as genai
+import os
+api_key = st.secrets.get("GEMINI_API_KEY") or os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
+genai.configure(api_key=api_key)
 st.set_page_config(
-    page_title="Barista AI | Premium Coffee Assistant",
+page_title="Barista AI | Premium Coffee Assistant",
     page_icon="☕",
     layout="wide",
     initial_sidebar_state="expanded"
