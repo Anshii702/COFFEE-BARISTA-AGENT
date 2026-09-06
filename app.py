@@ -84,13 +84,14 @@ if prompt := st.chat_input("Type your order or ask a menu question..."):
 
     with st.chat_message("assistant"):
         response_placeholder = st.empty()
-        system_instruction = f"You are a barista assistant. Use menu: {json.dumps(menu_data)}. Recommend items from this menu only."
-        
-model = genai.GenerativeModel(
-            model_name='gemini-1.5-flash',
-            system_instruction=system_instruction
-        )
-        response = model.generate_content(prompt)
+        system_instruction = f"You are a barista assistant. Use menu: {json.dumps(menu_data)}. Recommend items."
+
+        try:
+            model = genai.GenerativeModel(
+                model_name='gemini-1.5-flash',
+                system_instruction=system_instruction
+            )
+            response = model.generate_content(prompt)
             final_response = response.text if response.text else "I couldn't process that request."
             response_placeholder.markdown(final_response)
             st.session_state.messages.append({"role": "assistant", "content": final_response})
