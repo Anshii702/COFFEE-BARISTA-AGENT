@@ -67,8 +67,7 @@ with st.sidebar:
 
 project_id = os.environ.get("GOOGLE_CLOUD_PROJECT", "gen-lang-client-0019210947")
 location = os.environ.get("GOOGLE_CLOUD_REGION", "us-central1")
-client = genai.Client(vertexai=True, project=project_id, location=location)
-
+model = genai.GenerativeModel('gemini-1.5-flash')
 if "messages" not in st.session_state:
     st.session_state.messages = [
         {"role": "assistant", "content": "Welcome to our AI Coffee Bar! How can I assist you with our menu today?"}
@@ -87,12 +86,11 @@ if prompt := st.chat_input("Type your order or ask a menu question..."):
         response_placeholder = st.empty()
         system_instruction = f"You are a barista assistant. Use menu: {json.dumps(menu_data)}. Recommend items from this menu only."
         
-        try:
-            response = client.models.generate_content(
-                model='gemini-2.5-flash',
-                contents=prompt,
-                config={'system_instruction': system_instruction}
-            )
+model = genai.GenerativeModel(
+            model_name='gemini-1.5-flash',
+            system_instruction=system_instruction
+        )
+        response = model.generate_content(prompt)
             final_response = response.text if response.text else "I couldn't process that request."
             response_placeholder.markdown(final_response)
             st.session_state.messages.append({"role": "assistant", "content": final_response})
